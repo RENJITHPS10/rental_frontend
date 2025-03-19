@@ -28,6 +28,8 @@ const BookingList = () => {
             <p>Start: {new Date(booking.startDate).toLocaleDateString()}</p>
             <p>End: {new Date(booking.endDate).toLocaleDateString()}</p>
             <p>Status: {booking.status}</p>
+            <p>Needs Driver: {booking.needsDriver ? 'Yes' : 'No'}</p>
+            <p>Driver Assigned: {booking.driver ? 'Yes' : 'No'}</p>
             <div className="mt-2 flex space-x-2">
               {booking.status === 'pending' && (
                 <button
@@ -38,7 +40,7 @@ const BookingList = () => {
                   {cancelMutation.isPending ? 'Cancelling...' : 'Cancel'}
                 </button>
               )}
-              {booking.status === 'confirmed' && (
+              {booking.status === 'approved' && ( // Updated from 'approved' to 'confirmed'
                 <>
                   <button
                     onClick={() => navigate(`/customer/condition-report/${booking._id}`)}
@@ -46,12 +48,15 @@ const BookingList = () => {
                   >
                     Report Condition
                   </button>
-                  <button
-                    onClick={() => navigate(`/customer/payment/${booking._id}`)}
-                    className="bg-green-500 text-white p-2 rounded"
-                  >
-                    Make Payment
-                  </button>
+                  {/* Payment button logic */}
+                  {(!booking.needsDriver || (booking.needsDriver && booking.driver)) && (
+                    <button
+                      onClick={() => navigate(`/customer/payment/${booking._id}`)}
+                      className="bg-green-500 text-white p-2 rounded"
+                    >
+                      Make Payment
+                    </button>
+                  )}
                 </>
               )}
               {booking.status === 'completed' && (

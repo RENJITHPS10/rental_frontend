@@ -14,11 +14,14 @@ const LoginForm = () => {
     mutationFn: loginUserAPI,
     onSuccess: (data) => {
       sessionStorage.setItem('token', data.token);
-      dispatch(loginSuccess({ role:data.role, userId: data.userId }));
+      dispatch(loginSuccess({ role: data.role, userId: data.userId }));
       navigate(`/${data.role}`);
     },
-    onError: (error) => console.log(error)
-  
+    onError: (error) => {
+      // Extract error message from response and set it in Formik status
+      const errorMessage = error.response?.data?.msg || 'Login failed. Please try again.';
+      formik.setStatus(errorMessage);
+    },
   });
 
   const formik = useFormik({

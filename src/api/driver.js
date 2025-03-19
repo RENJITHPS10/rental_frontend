@@ -6,10 +6,7 @@ const getAuthHeader = () => ({
   headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` },
 });
 
-export const assignDriverAPI = async (bookingId, driverId) => {
-  const response = await axios.post(`${API_URL}/drivers/${bookingId}/assign`, { driverId }, getAuthHeader());
-  return response.data;
-};
+
 
 export const confirmDriverAssignmentAPI = async (bookingId) => {
   const response = await axios.post(`${API_URL}/drivers/${bookingId}/confirm`, {}, getAuthHeader());
@@ -51,5 +48,20 @@ export const updateCarLocationAPI = async (bookingId, locationData) => {
 
 export const getDriverReviewsAPI = async () => {
   const response = await axios.get(`${API_URL}/drivers/reviews`, getAuthHeader());
+  return response.data;
+};
+export const getDriverProfileAPI = async () => { // No userId needed, backend uses req.user.id
+  const response = await axios.get(`${API_URL}/drivers/profile`, getAuthHeader());
+  console.log(response.data)
+  return response.data;
+};
+
+// Update driver profile
+export const updateDriverAPI = async ({ driverId, location, availability }) => {
+  const response = await axios.put(
+    `${API_URL}/drivers/${driverId}`,
+    { location, availability },
+    getAuthHeader()
+  );
   return response.data;
 };

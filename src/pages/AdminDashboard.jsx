@@ -11,6 +11,8 @@ const AdminDashboard = () => (
         <Link to="/admin/users" className="p-4 bg-blue-500 text-white rounded text-center">User Management</Link>
         <Link to="/admin/vehicles" className="p-4 bg-blue-500 text-white rounded text-center">Vehicle Approvals</Link>
         <Link to="/admin/bookings" className="p-4 bg-blue-500 text-white rounded text-center">All Bookings</Link>
+        <Link to="/admin/assign-drivers" className="p-4 bg-blue-500 text-white rounded text-center">Assign Drivers </Link>
+        <Link to="/admin/license-approval" className="p-4 bg-blue-500 text-white rounded text-center">  License Approval </Link>
         <Link to="/admin/fraud" className="p-4 bg-blue-500 text-white rounded text-center">Fraud Detection</Link>
         <Link to="/admin/support" className="p-4 bg-blue-500 text-white rounded text-center">Support Tickets</Link>
       </div>

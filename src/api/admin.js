@@ -35,3 +35,31 @@ export const getUnapprovedVehiclesAPI = async () => {
     return response.data; // Should return an array of vehicles
 }
 
+export const assignDriverAPI = async (bookingId, driverId) => {
+  const response = await axios.post(`${API_URL}/drivers/${bookingId}/assign`, { driverId }, getAuthHeader());
+  return response.data;
+};
+export const getAvailableDriversAPI = async (bookingId) => {
+  const response = await axios.get(`${API_URL}/drivers/available`, {
+    ...getAuthHeader(),
+    params: { bookingId },
+  });
+  return response.data;
+};
+
+export const getUnverifiedUsersAPI = async () => {
+  const response = await axios.get(`${API_URL}/admin/users/unverified`, getAuthHeader());
+
+  return response.data;
+  
+};
+
+// Verify user license
+export const verifyUserLicenseAPI = async (userId, approve) => {
+  const response = await axios.put(
+    `${API_URL}/admin/users/${userId}/verify`,
+    { approve },
+    getAuthHeader()
+  );
+  return response.data;
+};

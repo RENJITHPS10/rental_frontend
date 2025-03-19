@@ -1,7 +1,6 @@
 import { useFormik } from 'formik';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-
 import { registerUserAPI } from '../../api/users';
 import { registerSchema } from '../../utils/validationSchemas';
 
@@ -10,14 +9,15 @@ const RegisterForm = () => {
 
   const mutation = useMutation({
     mutationFn: registerUserAPI,
-    onSuccess: () => navigate('/login'),
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token); // Store token if needed
+      navigate('/login');
+    },
     onError: (error) => {
       console.error('Mutation error:', error);
       formik.setStatus(error.response?.data?.msg || 'Registration failed');
     },
   });
-
- 
 
   const formik = useFormik({
     initialValues: { name: '', email: '', password: '', role: '', license: null },
@@ -25,9 +25,9 @@ const RegisterForm = () => {
     onSubmit: async (values) => {
       console.log('Form values:', values);
 
-      // Validate license for drivers
-      if (values.role === 'driver' && !values.license) {
-        formik.setStatus('License is required for drivers');
+      // Require license for customer and driver
+      if ((values.role === 'customer' || values.role === 'driver') && !values.license) {
+        formik.setStatus('License is required for customers and drivers');
         return;
       }
 
@@ -37,8 +37,8 @@ const RegisterForm = () => {
       formData.append('email', values.email);
       formData.append('password', values.password);
       formData.append('role', values.role);
-      if (values.role === 'driver' && values.license) {
-        formData.append('license', values.license);
+      if (values.license) {
+        formData.append('license', values.license); // File object
       }
 
       console.log('FormData:', [...formData.entries()]);
@@ -48,7 +48,6 @@ const RegisterForm = () => {
         await mutation.mutateAsync(formData);
       } catch (error) {
         console.error('Mutation error:', error);
-        formik.setStatus(error.response?.data?.msg || 'Registration failed');
       }
     },
   });
@@ -56,7 +55,7 @@ const RegisterForm = () => {
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded">
       <h2 className="text-2xl font-bold mb-4">Register</h2>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
         {/* Name Field */}
         <div className="mb-4">
           <input
@@ -124,17 +123,22 @@ const RegisterForm = () => {
           )}
         </div>
 
-        {/* License Field (Conditional) */}
-        {formik.values.role === 'driver' && (
+        {/* License Field (Required for customer and driver) */}
+        {(formik.values.role === 'customer' || formik.values.role === 'driver') && (
           <div className="mb-4">
+            <label htmlFor="license" className="block text-sm font-medium">
+              License (Required)
+            </label>
             <input
               type="file"
               name="license"
+              id="license"
               onChange={(e) => formik.setFieldValue('license', e.target.files[0])}
               className="w-full p-2 border rounded"
+              accept="image/*"
             />
-            {formik.touched.license && formik.errors.license && (
-              <p className="text-red-500 text-sm">{formik.errors.license}</p>
+            {formik.touched.license && !formik.values.license && (
+              <p className="text-red-500 text-sm">License is required</p>
             )}
           </div>
         )}

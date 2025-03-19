@@ -38,6 +38,17 @@ export const submitConditionReportAPI = async (bookingId, conditionData) => {
   return response.data;
 };
 
+// ../../api/bookings.js
+export const getBookingByIdAPI = async (bookingId) => {
+  try {
+    const response = await axios.get(`${API_URL}/bookings/${bookingId}`, getAuthHeader());
+    console.log('API Response:', response.data); // Debug
+    return response.data;
+  } catch (error) {
+    console.error('API Error:', error.response?.data || error.message);
+    throw error;
+  }
+};
 export const approveBookingAPI = async (bookingId, approval) => {
   const response = await axios.put(`${API_URL}/bookings/${bookingId}/approve`, { approval }, getAuthHeader());
   return response.data;
