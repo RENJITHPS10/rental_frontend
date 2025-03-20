@@ -10,6 +10,9 @@ export const registerSchema = Yup.object({
   email: Yup.string().email('Invalid email').required('Email is required'),
   password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
   role: Yup.string().oneOf(['customer', 'owner', 'driver']).required('Role is required'),
+  mobile: Yup.string()
+    .required('Mobile number is required')
+    .matches(/^\+?[1-9]\d{9}$/, 'Mobile number must be exactly 10 digits (e.g., +1234567890 or 1234567890)'),
   license: Yup.mixed().when('role', {
     is: 'driver',
     then: () => Yup.mixed().required('License is required for drivers'), // Explicitly return schema

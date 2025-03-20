@@ -11,7 +11,7 @@ const ProfileForm = () => {
   const { data: profileData, isLoading: profileLoading } = useQuery({
     queryKey: ['profile', userId],
     queryFn: async () => {
-      const response = await updateProfileAPI(new FormData()); // Fetch current profile
+      const response = await updateProfileAPI(new FormData()); // Should be getProfileAPI
       return response.data;
     },
     enabled: !!userId,
@@ -32,7 +32,7 @@ const ProfileForm = () => {
   const formik = useFormik({
     initialValues: {
       name: profileData?.name || '',
-      email: profileData?.email || '',
+      mobile: profileData?.mobile || '', // Added mobile number
       license: null,
     },
     validationSchema: profileSchema,
@@ -40,67 +40,150 @@ const ProfileForm = () => {
     onSubmit: async (values) => {
       const formData = new FormData();
       formData.append('name', values.name);
-      formData.append('email', values.email);
+      formData.append('mobile', values.mobile); // Added mobile number
       if (values.license) formData.append('license', values.license);
       await mutation.mutateAsync(formData);
     },
   });
 
-  if (profileLoading || (role === 'driver' && licenseLoading)) return <LoadingSpinner />;
+  if (profileLoading || (role === 'driver' && licenseLoading)) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-100 to-blue-50">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold mb-4">Update Profile</h2>
-      <form onSubmit={formik.handleSubmit}>
-        <div className="mb-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            className="w-full p-2 border rounded"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.name}
-          />
-          {formik.touched.name && formik.errors.name && (
-            <p className="text-red-500 text-sm">{formik.errors.name}</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full mx-auto bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-300 hover:shadow-2xl relative overflow-hidden">
+        {/* Subtle Gradient Border */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-10 rounded-2xl animate-pulse"></div>
+
+        {/* Heading */}
+        <h2 className="text-3xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-6 relative z-10">
+          Update Your Profile
+        </h2>
+
+        {/* Form */}
+        <form onSubmit={formik.handleSubmit} className="space-y-6 relative z-10">
+          {/* Name Field */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Enter your name"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-blue-400 bg-gray-50 text-gray-800 placeholder-gray-400"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+            />
+            {formik.touched.name && formik.errors.name && (
+              <p className="mt-2 text-red-500 text-sm animate-fade-in">{formik.errors.name}</p>
+            )}
+          </div>
+
+          {/* Mobile Number Field */}
+          <div>
+            <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-2">
+              Mobile Number
+            </label>
+            <input
+              type="tel"
+              name="mobile"
+              id="mobile"
+              placeholder="Enter your mobile number"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-blue-400 bg-gray-50 text-gray-800 placeholder-gray-400"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.mobile}
+            />
+            {formik.touched.mobile && formik.errors.mobile && (
+              <p className="mt-2 text-red-500 text-sm animate-fade-in">{formik.errors.mobile}</p>
+            )}
+          </div>
+
+          {/* License Field */}
+          <div>
+            <label htmlFor="license" className="block text-sm font-medium text-gray-700 mb-2">
+              Driver’s License (Optional)
+            </label>
+            <input
+              type="file"
+              name="license"
+              id="license"
+              onChange={(e) => formik.setFieldValue('license', e.target.files[0])}
+              className="w-full p-3 border border-gray-300 rounded-lg text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:font-semibold hover:file:bg-blue-700 transition-all duration-200 bg-gray-50"
+            />
+            {formik.touched.license && formik.errors.license && (
+              <p className="mt-2 text-red-500 text-sm animate-fade-in">{formik.errors.license}</p>
+            )}
+          </div>
+
+          {/* License Status (Driver Only) */}
+          {role === 'driver' && (
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <p className="text-gray-700">
+                <span className="font-medium">License Status:</span>{' '}
+                <span
+                  className={`inline-block px-2 py-1 rounded-full text-sm font-semibold ${
+                    licenseStatus?.status === 'approved'
+                      ? 'bg-green-100 text-green-800'
+                      : licenseStatus?.status === 'pending'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {licenseStatus?.status || 'N/A'}
+                </span>
+              </p>
+            </div>
           )}
-        </div>
-        <div className="mb-4">
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="w-full p-2 border rounded"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
-          />
-          {formik.touched.email && formik.errors.email && (
-            <p className="text-red-500 text-sm">{formik.errors.email}</p>
+
+          {/* Error Message */}
+          {formik.status && (
+            <p className="text-red-500 text-sm text-center animate-fade-in">{formik.status}</p>
           )}
-        </div>
-        <div className="mb-4">
-          <input
-            type="file"
-            name="license"
-            onChange={(e) => formik.setFieldValue('license', e.target.files[0])}
-            className="w-full p-2 border rounded"
-          />
-          {formik.touched.license && formik.errors.license && (
-            <p className="text-red-500 text-sm">{formik.errors.license}</p>
-          )}
-        </div>
-        {role === 'driver' && <p className="mb-4">License Status: {licenseStatus?.status || 'N/A'}</p>}
-        {formik.status && <p className="text-red-500 mb-4">{formik.status}</p>}
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded"
-          disabled={mutation.isPending}
-        >
-          {mutation.isPending ? 'Updating...' : 'Update Profile'}
-        </button>
-      </form>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? (
+              <span className="flex items-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  />
+                </svg>
+                Updating...
+              </span>
+            ) : (
+              'Update Profile'
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

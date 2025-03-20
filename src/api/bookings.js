@@ -59,12 +59,24 @@ export const getDriverBookingsAPI = async () => {
   return response.data;
 };
 
-export const makePaymentAPI = async (paymentData) => {
-  const response = await axios.post(`${API_URL}/payment`, paymentData, getAuthHeader());
+export const makePaymentAPI = async ({ bookingId, paymentMethodId }) => {
+  const response = await axios.post(
+    `${API_URL}/payments/${bookingId}`, // Match backend route
+    { bookingId, paymentMethodId },
+    getAuthHeader()
+  );
+  return response.data;
+};
+export const submitRatingAPI = async (bookingId, ratingData) => {
+  const response = await axios.post(`${API_URL}/vehicles/${bookingId}/rate`, ratingData, getAuthHeader());
   return response.data;
 };
 
-export const submitRatingAPI = async (bookingId, ratingData) => {
-  const response = await axios.post(`${API_URL}/vehicles/${bookingId}/rate`, ratingData, getAuthHeader());
+export const cancelDriverRequestAPI = async (bookingId) => {
+  const response = await axios.put(
+    `${API_URL}/bookings/${bookingId}/cancel-driver`,
+    {},
+    getAuthHeader()
+  );
   return response.data;
 };

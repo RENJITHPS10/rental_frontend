@@ -9,7 +9,7 @@ const getAuthHeader = () => ({
 
 
 export const confirmDriverAssignmentAPI = async (bookingId) => {
-  const response = await axios.post(`${API_URL}/drivers/${bookingId}/confirm`, {}, getAuthHeader());
+  const response = await axios.post(`${API_URL}/driver/${bookingId}/confirm`, {}, getAuthHeader());
   return response.data;
 };
 
@@ -63,5 +63,10 @@ export const updateDriverAPI = async ({ driverId, location, availability }) => {
     { location, availability },
     getAuthHeader()
   );
+  return response.data;
+};
+
+export const confirmDriverPickupReadinessAPI = async (bookingId) => {
+  const response = await axios.post(`${API_URL}/drivers/${bookingId}/confirm-pickup`, {}, getAuthHeader());
   return response.data;
 };

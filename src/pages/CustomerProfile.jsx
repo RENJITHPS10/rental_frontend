@@ -3,7 +3,7 @@ import Footer from '../components/common/Footer';
 import ProfileForm from '../components/customer/ProfileForm';
 
 const CustomerProfile = () => (
-  <div className="flex flex-col min-h-screen">
+  <div className="flex flex-col ">
     <Navbar />
     <main className="flex-grow p-4">
       <ProfileForm />

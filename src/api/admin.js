@@ -55,10 +55,10 @@ export const getUnverifiedUsersAPI = async () => {
 };
 
 // Verify user license
-export const verifyUserLicenseAPI = async (userId, approve) => {
+export const verifyUserLicenseAPI = async (userId, approve, rejectionReason) => {
   const response = await axios.put(
     `${API_URL}/admin/users/${userId}/verify`,
-    { approve },
+    { approve, rejectionReason },
     getAuthHeader()
   );
   return response.data;
