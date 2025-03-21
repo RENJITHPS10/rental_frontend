@@ -45,10 +45,12 @@ export const profileSchema = Yup.object({
 });
 
 export const conditionReportSchema = Yup.object({
-  condition: Yup.string().required('Condition description is required'),
-  images: Yup.array().min(1, 'At least one image is required'),
+  conditionBefore: Yup.string().max(500, 'Max 500 characters'),
+  conditionAfter: Yup.string().max(500, 'Max 500 characters'),
+  images: Yup.array()
+    .of(Yup.mixed().test('fileSize', 'File too large', (value) => value && value.size <= 5 * 1024 * 1024)) // 5MB max
+    .max(10, 'Max 10 images'),
 });
-
 export const paymentSchema = Yup.object({
   amount: Yup.number().required('Amount is required').positive('Amount must be positive'),
   paymentMethod: Yup.string()

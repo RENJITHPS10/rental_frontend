@@ -18,7 +18,7 @@ const DriverDashboard = () => (
           Reviews
         </Link>
         <Link to="/driver/profile" className="p-4 bg-blue-500 text-white rounded text-center">
-          Update Profile
+          Update Location
         </Link>
       </div>
     </main>

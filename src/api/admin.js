@@ -39,6 +39,8 @@ export const assignDriverAPI = async (bookingId, driverId) => {
   const response = await axios.post(`${API_URL}/drivers/${bookingId}/assign`, { driverId }, getAuthHeader());
   return response.data;
 };
+
+
 export const getAvailableDriversAPI = async (bookingId) => {
   const response = await axios.get(`${API_URL}/drivers/available`, {
     ...getAuthHeader(),
@@ -62,4 +64,13 @@ export const verifyUserLicenseAPI = async (userId, approve, rejectionReason) => 
     getAuthHeader()
   );
   return response.data;
+};
+
+export const fetchConditionReportsAPI = async (bookingId = '') => {
+  const url = bookingId
+    ? `${API_URL}/admin/condition-reports?bookingId=${bookingId}`
+    : `${API_URL}/admin/condition-reports`;
+  const response = await axios.get(url, getAuthHeader());
+  console.log(response)
+  return response.data.reports;
 };

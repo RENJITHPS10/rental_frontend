@@ -30,6 +30,7 @@ const DriverBookingList = () => {
   };
 
   if (isLoading) return <LoadingSpinner />;
+  console.log(data);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -58,14 +59,14 @@ const DriverBookingList = () => {
               <div>
                 <h3 className="text-md font-semibold text-gray-800">Customer Details</h3>
                 <p className="text-gray-600">Name: {booking.customer?.name || 'N/A'}</p>
-                <p className="text-gray-600">Phone: {booking.customer?.phone || 'N/A'}</p>
+                <p className="text-gray-600">Phone: {booking.customer?.mobile || 'N/A'}</p>
               </div>
 
               {/* Owner Info */}
               <div>
                 <h3 className="text-md font-semibold text-gray-800">Owner Details</h3>
                 <p className="text-gray-600">Name: {booking.vehicle?.owner?.name || 'N/A'}</p>
-                <p className="text-gray-600">Phone: {booking.vehicle?.owner?.phone || 'N/A'}</p>
+                <p className="text-gray-600">Phone: {booking.vehicle?.owner?.mobile || 'N/A'}</p>
               </div>
 
               {/* Location Info with Google Maps Links */}
@@ -113,7 +114,7 @@ const DriverBookingList = () => {
                     onClick={() => navigate(`/driver/condition-report/${booking._id}`)}
                     className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
                   >
-                    Report Condition
+                    Report Condition Before Pickup
                   </button>
                   <button
                     onClick={() => navigate(`/driver/car-location/${booking._id}`)}
@@ -129,6 +130,14 @@ const DriverBookingList = () => {
                     {completeMutation.isPending ? 'Completing...' : 'Complete Trip'}
                   </button>
                 </>
+              )}
+              {booking.status === 'completed' && (
+                <button
+                  onClick={() => navigate(`/driver/condition-report/${booking._id}`)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Report Condition After Delivery
+                </button>
               )}
             </div>
           </div>

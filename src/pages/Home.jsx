@@ -1,5 +1,6 @@
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
+import { Link } from 'react-router-dom';
 
 const Home = () => (
   <div className="flex flex-col min-h-screen bg-gray-50">
@@ -9,14 +10,16 @@ const Home = () => (
       <section className="relative bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6 animate-fade-in-down">
-            Welcome to Bike & Car Rental
+            Welcome to Bike & Car Rental  
           </h1>
           <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-8 animate-fade-in-up">
             Rent bikes and cars easily with our seamless platform. Your journey starts here!
           </p>
-          <button className="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold text-lg hover:bg-blue-100 transition-all duration-300 shadow-lg hover:shadow-xl">
-            Get Started
-          </button>
+          <Link to={'/login'}>
+            <button className="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold text-lg hover:bg-blue-100 transition-all duration-300 shadow-lg hover:shadow-xl">
+              Get Started
+            </button>
+          </Link>
         </div>
         {/* Background Decoration */}
         <div className="absolute inset-0 overflow-hidden opacity-20">

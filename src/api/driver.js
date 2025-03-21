@@ -70,3 +70,14 @@ export const confirmDriverPickupReadinessAPI = async (bookingId) => {
   const response = await axios.post(`${API_URL}/drivers/${bookingId}/confirm-pickup`, {}, getAuthHeader());
   return response.data;
 };
+
+export const getBookingAPI = async (bookingId) => {
+  try {
+    const response = await axios.get(`${API_URL}/bookings/report/${bookingId}`, getAuthHeader());
+    console.log(response)
+    return response.data;
+
+  } catch (error) {
+    throw new Error(error.response?.data?.msg || 'Failed to fetch booking');
+  }
+};

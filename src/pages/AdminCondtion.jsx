@@ -1,15 +1,16 @@
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
-import VehicleForm from '../components/owner/VehicleForm';
+import Conditionview from '../components/admin/Conditionview';
 
-const OwnerAddVehicle = () => (
+
+const AdminCondition = () => (
   <div className="flex flex-col min-h-screen">
     <Navbar />
-    <main className="flex-grow ">
-      <VehicleForm />
+    <main className="flex-grow">
+      <Conditionview/>
     </main>
     <Footer />
   </div>
 );
 
-export default OwnerAddVehicle;
+export default AdminCondition;
