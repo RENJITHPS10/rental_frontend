@@ -15,7 +15,8 @@ export const createSupportTicketAPI = async (ticketData) => {
 
 export const getSupportTicketsAPI = async () => {
   const response = await axios.get(`${API_URL}/support`, getAuthHeader());
-  return response.data.tickets || []; // For admin or all tickets (if applicable)
+  console.log(response.data)
+  return response.data || []; // For admin or all tickets (if applicable)
 };
 
 export const resolveSupportTicketAPI = async (ticketId, resolution) => {
