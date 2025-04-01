@@ -44,6 +44,8 @@ import AdminLicenseApproval from './pages/AdminLicenseApproval';
 import DriverProfile from './pages/DriverProfile';
 import DriverLocation from './pages/DriverLocation';
 import AdminCondition from './pages/AdminCondtion';
+import PaymentSuccess from './pages/CustomerPaymentSuccess';
+import AdminPayments from './pages/AdminPayments';
 
 
 const queryClient = new QueryClient();
@@ -72,6 +74,7 @@ const App = () => {
             <Route path="/admin/support" element={<ProtectedRoute allowedRoles={['admin']}><AdminSupport /></ProtectedRoute>} />
             <Route path="/admin/assign-drivers" element={<ProtectedRoute allowedRoles={['admin']}>    <AdminAssignDriver />  </ProtectedRoute>} />
             <Route path="/admin/license-approval" element={<ProtectedRoute allowedRoles={['admin']}>        <AdminLicenseApproval />      </ProtectedRoute>} />
+            <Route path="/admin/payments" element={<ProtectedRoute allowedRoles={['admin']}><AdminPayments /></ProtectedRoute>} />
             <Route path="/admin/conditionreport" element={<ProtectedRoute allowedRoles={['admin']}>        <AdminCondition/>      </ProtectedRoute>} />
             {/* Customer Routes */}
             <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><CustomerDashboard /></ProtectedRoute>} />
@@ -83,13 +86,8 @@ const App = () => {
             <Route path="/customer/condition-report/:bookingId" element={<ProtectedRoute allowedRoles={['customer']}><CustomerConditionReport /></ProtectedRoute>} />
             <Route path="/customer/payment/:bookingId" element={<ProtectedRoute allowedRoles={['customer']}><CustomerPayment /></ProtectedRoute>} />
             <Route path="/customer/rating/:bookingId" element={<ProtectedRoute allowedRoles={['customer']}><CustomerRating /></ProtectedRoute>} />
-            <Route
-              path="/customer/booking/:bookingId/driver-location"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <DriverLocation />
-                </ProtectedRoute>
-              }/>
+            <Route path="customer/payment/success" element={    <ProtectedRoute allowedRoles={['customer']}>      <PaymentSuccess />    </ProtectedRoute>   }     />
+            <Route path="/customer/booking/:bookingId/driver-location"  element={    <ProtectedRoute allowedRoles={['customer']}>      <DriverLocation />    </ProtectedRoute> }/>
 
               {/* Owner Routes */}
             <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboard /></ProtectedRoute>} />

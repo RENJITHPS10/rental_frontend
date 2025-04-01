@@ -4,23 +4,21 @@ import { fetchConditionReportsAPI } from '../../api/admin';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 function Conditionview() {
-  const [searchTerm, setSearchTerm] = useState(''); // State for search input
-  const [searchBookingId, setSearchBookingId] = useState(''); // State for active search
+  const [searchTerm, setSearchTerm] = useState(''); // Input value
+  const [activeSearchTerm, setActiveSearchTerm] = useState(''); // Active search term for query
 
-  const { data: reports, isLoading, error, refetch } = useQuery({
-    queryKey: ['conditionReports', searchBookingId], // Include search term in query key to refetch on search
-    queryFn: () => fetchConditionReportsAPI(searchBookingId), // Pass search term to API
+  const { data: reports, isLoading, error } = useQuery({
+    queryKey: ['conditionReports', activeSearchTerm], // Refetch only when activeSearchTerm changes
+    queryFn: () => fetchConditionReportsAPI(activeSearchTerm), // Use active search term
   });
 
   const handleSearch = () => {
-    setSearchBookingId(searchTerm.trim()); // Trigger search with trimmed input
-    refetch(); // Refetch data with new search term
+    setActiveSearchTerm(searchTerm.trim()); // Update active search term on button click
   };
 
   const handleClearSearch = () => {
     setSearchTerm(''); // Clear input
-    setSearchBookingId(''); // Reset search
-    refetch(); // Fetch all reports
+    setActiveSearchTerm(''); // Reset active search to load all reports
   };
 
   if (isLoading) {
@@ -59,7 +57,7 @@ function Conditionview() {
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)} // Update input value only
               placeholder="Enter Booking ID"
               className="flex-1 p-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
@@ -69,7 +67,7 @@ function Conditionview() {
             >
               Search
             </button>
-            {searchBookingId && (
+            {activeSearchTerm && (
               <button
                 onClick={handleClearSearch}
                 className="bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-2 rounded-lg font-semibold hover:from-red-700 hover:to-red-900 transition-all duration-300 shadow-md"
@@ -206,7 +204,7 @@ function Conditionview() {
         ) : (
           <div className="bg-gray-800/50 backdrop-blur-md border border-gray-700/50 rounded-3xl shadow-2xl p-8 text-center">
             <p className="text-gray-300 text-lg">
-              {searchBookingId ? 'No reports found for this booking ID.' : 'No condition reports available.'}
+              {activeSearchTerm ? 'No reports found for this booking ID.' : 'No condition reports available.'}
             </p>
           </div>
         )}
@@ -215,4 +213,4 @@ function Conditionview() {
   );
 }
 
-export default Conditionview;
+export default Conditionview; 

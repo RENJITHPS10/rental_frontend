@@ -70,7 +70,22 @@ export const fetchConditionReportsAPI = async (bookingId = '') => {
   const url = bookingId
     ? `${API_URL}/admin/condition-reports?bookingId=${bookingId}`
     : `${API_URL}/admin/condition-reports`;
-  const response = await axios.get(url, getAuthHeader());
-  console.log(response)
-  return response.data.reports;
+  try {
+    const response = await axios.get(url, getAuthHeader());
+    console.log('API Response:', response.data); // Debug full response
+    return response.data.reports;
+  } catch (error) {
+    console.error('API Error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+export const getAllPaymentsAPI = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/payments`, getAuthHeader());
+    console.log('Get All Payments Response:', response.data); // Debug
+    return response.data.payments; // Return the payments array
+  } catch (error) {
+    console.error('Get All Payments Error:', error.response?.data || error.message);
+    throw error;
+  }
 };

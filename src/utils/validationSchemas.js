@@ -38,10 +38,12 @@ export const supportTicketSchema = Yup.object({
   issue: Yup.string().required('Issue description is required'),
 });
 
-export const profileSchema = Yup.object({
-  name: Yup.string().required('Name is required'),
-  email: Yup.string().email('Invalid email').required('Email is required'),
-  license: Yup.mixed(),
+export const profileSchema = Yup.object().shape({
+  name: Yup.string().notRequired(),
+  mobile: Yup.string()
+    .matches(/^[0-9]{10}$/, 'Invalid mobile number')
+    .notRequired(),
+  license: Yup.mixed().notRequired(),
 });
 
 export const conditionReportSchema = Yup.object({
@@ -52,17 +54,10 @@ export const conditionReportSchema = Yup.object({
     .max(10, 'Max 10 images'),
 });
 export const paymentSchema = Yup.object({
-  amount: Yup.number().required('Amount is required').positive('Amount must be positive'),
-  paymentMethod: Yup.string()
-    .oneOf(['credit_card', 'debit_card'], 'Invalid payment method')
-    .required('Payment method is required'),
-  cardNumber: Yup.string()
-    .matches(/^\d{16}$/, 'Card number must be 16 digits')
-    .required('Card number is required'),
-  expiry: Yup.string()
-    .matches(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Expiry must be MM/YY')
-    .required('Expiry is required'),
-  cvv: Yup.string().matches(/^\d{3}$/, 'CVV must be 3 digits').required('CVV is required'),
+  amount: Yup.number()
+    .required('Amount is required')
+    .positive('Amount must be positive'),
+
 });
 
 export const ratingSchema = Yup.object({
@@ -70,11 +65,10 @@ export const ratingSchema = Yup.object({
     .min(1, 'Rating must be between 1 and 5')
     .max(5, 'Rating must be between 1 and 5')
     .required('Vehicle rating is required'),
-  vehicleComment: Yup.string().required('Vehicle comment is required'),
   driverRating: Yup.number()
     .min(1, 'Rating must be between 1 and 5')
-    .max(5, 'Rating must be between 1 and 5'),
-  driverComment: Yup.string(),
+    .max(5, 'Rating must be between 1 and 5')
+    .nullable(), // Makes driverRating optional
 });
 
 

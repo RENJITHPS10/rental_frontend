@@ -31,19 +31,16 @@ const BookingList = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Neon Background Glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full filter blur-3xl animate-pulse-slow"></div>
         <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-purple-600/20 rounded-full filter blur-3xl animate-pulse-slow"></div>
       </div>
 
       <div className="max-w-5xl mx-auto relative z-10">
-        {/* Heading */}
         <h2 className="text-4xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 mb-12 animate-text-glow">
           My Bookings
         </h2>
 
-        {/* Bookings Grid */}
         <div className="grid grid-cols-1 gap-8">
           {data?.length === 0 ? (
             <div className="bg-gray-800/50 backdrop-blur-md border border-gray-700/50 rounded-3xl shadow-2xl p-8 text-center">
@@ -123,9 +120,7 @@ const BookingList = () => {
                   </p>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="mt-6 flex flex-wrap gap-3">
-                  {/* Cancel Booking Button */}
                   {booking.status === 'pending' && (
                     <button
                       onClick={() => cancelBookingMutation.mutate(booking._id)}
@@ -146,7 +141,6 @@ const BookingList = () => {
                     </button>
                   )}
 
-                  {/* Cancel Driver Button */}
                   {booking.status === 'approved' && booking.needsDriver && !booking.driver && (
                     <button
                       onClick={() => cancelDriverMutation.mutate(booking._id)}
@@ -167,7 +161,6 @@ const BookingList = () => {
                     </button>
                   )}
 
-                  {/* Payment Button */}
                   {booking.status === 'completed' && (
                     <button
                       onClick={() => navigate(`/customer/payment/${booking._id}`)}
@@ -177,7 +170,6 @@ const BookingList = () => {
                     </button>
                   )}
 
-                  {/* View Driver Location Link */}
                   {booking.driver && (booking.status === 'assigned' || booking.status === 'pickup-confirmed') && booking.currentLocation && (
                     <a
                       href={`https://www.google.com/maps?q=${booking.currentLocation.latitude},${booking.currentLocation.longitude}`}
@@ -189,20 +181,13 @@ const BookingList = () => {
                     </a>
                   )}
 
-
-          
-
-                  {/* Completed Status Buttons */}
-                  {booking.status === 'completed' && (
-                    <>
-                   
-                      <button
-                        onClick={() => navigate(`/customer/rating/${booking._id}`)}
-                        className="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white px-4 py-2 rounded-lg font-semibold hover:from-indigo-700 hover:to-indigo-900 transition-all duration-300 shadow-md transform hover:scale-105"
-                      >
-                        Rate Experience
-                      </button>
-                    </>
+                  {booking.status === 'paid' && booking.rating === null && (
+                    <button
+                      onClick={() => navigate(`/customer/rating/${booking._id}`)}
+                      className="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white px-4 py-2 rounded-lg font-semibold hover:from-indigo-700 hover:to-indigo-900 transition-all duration-300 shadow-md transform hover:scale-105"
+                    >
+                      Rate Experience
+                    </button>
                   )}
                 </div>
               </div>

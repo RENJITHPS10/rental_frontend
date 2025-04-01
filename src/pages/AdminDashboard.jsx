@@ -16,6 +16,7 @@ const AdminDashboard = () => (
         <Link to="/admin/fraud" className="p-4 bg-blue-500 text-white rounded text-center">Fraud Detection</Link>
         <Link to="/admin/support" className="p-4 bg-blue-500 text-white rounded text-center">Support Tickets</Link>
         <Link to="/admin/conditionreport" className="p-4 bg-blue-500 text-white rounded text-center">View Condition report</Link>
+        <Link to="/admin/payments" className="p-4 bg-blue-500 text-white rounded text-center">All Payments</Link>
       </div>
     </main>
     <Footer />

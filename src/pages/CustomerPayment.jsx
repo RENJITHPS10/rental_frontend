@@ -5,7 +5,7 @@ import PaymentForm from '../components/customer/PaymentForm';
 const CustomerPayment = () => (
   <div className="flex flex-col min-h-screen">
     <Navbar />
-    <main className="flex-grow p-4">
+    <main className="flex-grow ">
       <PaymentForm />
     </main>
     <Footer />

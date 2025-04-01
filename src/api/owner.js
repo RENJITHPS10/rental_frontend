@@ -7,8 +7,14 @@ const getAuthHeader = () => ({
 });
 
 export const getOwnerEarningsAPI = async () => {
-  const response = await axios.get(`${API_URL}/owner/earnings`, getAuthHeader());
-  return response.data;
+  try {
+    const response = await axios.get(`${API_URL}/owners/earnings`, getAuthHeader());
+    console.log('Owner Earnings Response:', response.data); // Debug
+    return response.data;
+  } catch (error) {
+    console.error('Owner Earnings Error:', error.response?.data || error.message);
+    throw error;
+  }
 };
 
 export const getOwnerReviewsAPI = async () => {

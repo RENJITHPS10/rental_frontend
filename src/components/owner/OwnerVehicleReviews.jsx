@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getOwnerReviewsAPI } from '../../api/owner';
 import LoadingSpinner from '../common/LoadingSpinner';
+import { FaStar } from 'react-icons/fa';
 
 const OwnerVehicleReviews = () => {
   const { data, isLoading, isError, error } = useQuery({
@@ -12,7 +13,7 @@ const OwnerVehicleReviews = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-gray-900">
         <LoadingSpinner />
       </div>
     );
@@ -20,10 +21,10 @@ const OwnerVehicleReviews = () => {
 
   if (isError) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="text-center p-6 bg-red-100 text-red-800 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-2">Oops! Something went wrong</h2>
-          <p>{error?.message || 'Failed to load reviews. Please try again later.'}</p>
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+        <div className="bg-gray-800/50 backdrop-blur-md border border-red-500/50 rounded-2xl p-8 shadow-md text-center max-w-md w-full">
+          <h2 className="text-2xl font-semibold text-red-400 mb-3 animate-pulse">Error Loading Reviews</h2>
+          <p className="text-gray-300">{error?.message || 'Failed to load reviews. Please try again.'}</p>
         </div>
       </div>
     );
@@ -34,56 +35,70 @@ const OwnerVehicleReviews = () => {
 
   if (reviews.length === 0) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="text-center p-6 bg-gray-100 text-gray-600 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-2">No Reviews Yet</h2>
-          <p>It looks like there are no reviews for your vehicles at the moment.</p>
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+        <div className="bg-gray-800/50 backdrop-blur-md border border-gray-700/50 rounded-2xl p-8 shadow-md text-center max-w-md w-full">
+          <h2 className="text-2xl font-semibold text-cyan-400 mb-3">No Reviews Yet</h2>
+          <p className="text-gray-300">Your vehicles haven’t received any reviews yet. Keep up the great work!</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+    <div className="min-h-screen bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Neon Background Glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full filter blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-purple-600/20 rounded-full filter blur-3xl animate-pulse-slow"></div>
+      </div>
+
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* Heading */}
+        <h2 className="text-4xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 mb-12 animate-text-glow">
           Vehicle Reviews
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map((review) => (
-            <div
-              key={review._id}
-              className="p-5 bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-            >
-              <div className="flex items-center mb-3">
-                <span className="text-lg font-semibold text-gray-700">Vehicle:</span>
-                <span className="ml-2 text-lg text-gray-900">{review.vehicle.model}</span>
-              </div>
-              <div className="flex items-center mb-3">
-                <span className="text-lg font-semibold text-gray-700">Rating:</span>
-                <div className="ml-2 flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className={`w-5 h-5 ${
-                        i < review.vehicleRating ? 'text-yellow-400' : 'text-gray-300'
-                      }`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                  <span className="ml-2 text-gray-600">({review.vehicleRating}/5)</span>
+
+        {/* Reviews Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {reviews.map((review) => {
+            const roundedRating = Number(review.vehicleRating || 0).toFixed(2); // Round to 2 decimal places
+            const ratingForStars = Math.round(review.vehicleRating || 0); // For star display (whole stars)
+
+            return (
+              <div
+                key={review._id}
+                className="bg-gray-800/50 backdrop-blur-md border border-gray-700/50 rounded-2xl p-6 shadow-md transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]"
+              >
+                <div className="space-y-4">
+                  {/* Vehicle */}
+                  <div className="flex items-center">
+                    <span className="text-lg font-medium text-cyan-400">Vehicle:</span>
+                    <span className="ml-2 text-lg text-gray-200">{review.vehicle?.model || 'N/A'}</span>
+                  </div>
+
+                  {/* Rating */}
+                  <div className="flex items-center">
+                    <span className="text-lg font-medium text-cyan-400">Rating:</span>
+                    <div className="ml-2 flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar
+                          key={i}
+                          size={22}
+                          className={`${
+                            i < ratingForStars ? 'text-yellow-400' : 'text-gray-500'
+                          }`}
+                        />
+                      ))}
+                      <span className="ml-2 text-gray-400 text-sm">({roundedRating}/5)</span>
+                    </div>
+                  </div>
+
+                  {/* Comment */}
+                
                 </div>
               </div>
-              <div>
-                <span className="text-lg font-semibold text-gray-700">Comment:</span>
-                <p className="mt-1 text-gray-600 italic">"{review.vehicleComment}"</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

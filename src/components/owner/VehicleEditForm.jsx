@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { updateVehicleAPI, getOwnerVehiclesAPI } from '../../api/vehicles';
 import { useParams, useNavigate } from 'react-router-dom';
-import { vehicleSchema } from '../../utils/validationSchemas';
+
 import { useState, useEffect } from 'react';
 import LoadingSpinner from '../common/LoadingSpinner';
 
@@ -30,18 +30,18 @@ const VehicleEditForm = () => {
   const formik = useFormik({
     initialValues: {
       model: vehicle?.model || '',
-      type: vehicle?.vehicleType || '', // Renamed to match VehicleForm
-      price: vehicle?.pricePerDay || '', // Renamed to match VehicleForm
+      type: vehicle?.vehicleType || '',
+      price: vehicle?.pricePerDay || '',
       fuelType: vehicle?.fuelType || '',
       category: vehicle?.category || '',
       seatingCapacity: vehicle?.seatingCapacity || '',
       location: vehicle?.location || '',
       registration: vehicle?.registration || '',
-      images: [], // New images to upload
-      insuranceImage: null, // New insurance image to upload
-      pollutionImage: null, // New pollution image to upload
+      availability: vehicle?.availability ?? true, // Default to true if undefined
+      images: [],
+      insuranceImage: null,
+      pollutionImage: null,
     },
-    validationSchema: vehicleSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
       const formData = new FormData();
@@ -53,6 +53,7 @@ const VehicleEditForm = () => {
       formData.append('seatingCapacity', values.seatingCapacity);
       formData.append('location', values.location);
       formData.append('registration', values.registration);
+      formData.append('availability', values.availability); // Add availability
       values.images.forEach((image) => formData.append('images', image));
       if (values.insuranceImage) formData.append('insuranceImage', values.insuranceImage);
       if (values.pollutionImage) formData.append('pollutionImage', values.pollutionImage);
@@ -86,7 +87,6 @@ const VehicleEditForm = () => {
     }
   };
 
-  // Cleanup previews to prevent memory leaks
   useEffect(() => {
     return () => {
       imagePreviews.forEach((preview) => URL.revokeObjectURL(preview));
@@ -95,7 +95,6 @@ const VehicleEditForm = () => {
     };
   }, [imagePreviews, insurancePreview, pollutionPreview]);
 
-  // Set initial previews from existing vehicle data
   useEffect(() => {
     if (vehicle) {
       if (vehicle.images && imagePreviews.length === 0) {
@@ -128,7 +127,7 @@ const VehicleEditForm = () => {
               id="model"
               type="text"
               name="model"
-              placeholder="e.g., Toyota Camry"
+              placeholder="e.g.,Toyota Camry"
               className={`w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
                 formik.touched.model && formik.errors.model ? 'border-red-500' : 'border-gray-300'
               }`}
@@ -184,6 +183,30 @@ const VehicleEditForm = () => {
             />
             {formik.touched.price && formik.errors.price && (
               <p className="mt-1 text-red-500 text-sm animate-fade-in">{formik.errors.price}</p>
+            )}
+          </div>
+
+          {/* Availability */}
+          <div>
+            <label htmlFor="availability" className="block text-sm font-medium text-gray-700 mb-1">
+              Availability
+            </label>
+            <div className="flex items-center">
+              <input
+                id="availability"
+                type="checkbox"
+                name="availability"
+                className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                checked={formik.values.availability}
+              />
+              <label htmlFor="availability" className="ml-2 text-sm text-gray-700">
+                Vehicle is Available
+              </label>
+            </div>
+            {formik.touched.availability && formik.errors.availability && (
+              <p className="mt-1 text-red/500 text-red-500 text-sm animate-fade-in">{formik.errors.availability}</p>
             )}
           </div>
 
@@ -274,7 +297,7 @@ const VehicleEditForm = () => {
               value={formik.values.location}
             />
             {formik.touched.location && formik.errors.location && (
-              <p class Pubblic="mt-1 text-red-500 text-sm animate-fade-in">{formik.errors.location}</p>
+              <p className="mt-1 text-red-500 text-sm animate-fade-in">{formik.errors.location}</p>
             )}
           </div>
 
@@ -418,4 +441,3 @@ const VehicleEditForm = () => {
 };
 
 export default VehicleEditForm;
-

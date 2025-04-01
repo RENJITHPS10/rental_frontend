@@ -42,7 +42,7 @@ export const submitConditionReportAPI = async (bookingId, conditionData) => {
 export const getBookingByIdAPI = async (bookingId) => {
   try {
     const response = await axios.get(`${API_URL}/bookings/${bookingId}`, getAuthHeader());
-    console.log('API Response:', response.data); // Debug
+  
     return response.data;
   } catch (error) {
     console.error('API Error:', error.response?.data || error.message);
@@ -60,17 +60,17 @@ export const getDriverBookingsAPI = async () => {
 };
 
 export const makePaymentAPI = async ({ bookingId, paymentMethodId }) => {
+
   const response = await axios.post(
-    `${API_URL}/payments/${bookingId}`, // Match backend route
-    { bookingId, paymentMethodId },
+    `${API_URL}/payments/${bookingId}`,
+    { paymentMethodId }, // Only send paymentMethodId in body
     getAuthHeader()
   );
+  console.log(response)
   return response.data;
 };
-export const submitRatingAPI = async (bookingId, ratingData) => {
-  const response = await axios.post(`${API_URL}/vehicles/${bookingId}/rate`, ratingData, getAuthHeader());
-  return response.data;
-};
+
+
 
 export const cancelDriverRequestAPI = async (bookingId) => {
   const response = await axios.put(

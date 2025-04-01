@@ -32,7 +32,7 @@ export const getDriverEarningsAPI = async () => {
 };
 
 export const rateDriverAPI = async (bookingId, ratingData) => {
-  const response = await axios.post(`${API_URL}/drivers/${bookingId}/rate`, ratingData, getAuthHeader());
+  const response = await axios.post(`${API_URL}/drivers/${bookingId}/rate-driver`, ratingData, getAuthHeader());
   return response.data;
 };
 

@@ -37,6 +37,11 @@ export const deleteVehicleAPI = async (vehicleId) => {
   return response.data;
 };
 
+export const submitRatingAPI = async (bookingId, ratingData) => {
+  const response = await axios.post(`${API_URL}/vehicles/${bookingId}/rate-vehicle`, ratingData, getAuthHeader());
+  return response.data;
+};
+
 export const approveVehicleAPI = async (vehicleId, approval) => {
   const response = await axios.put(`${API_URL}/vehicles/${vehicleId}/approve`, { approval }, getAuthHeader());
   return response.data;
