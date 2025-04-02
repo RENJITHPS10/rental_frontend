@@ -7,7 +7,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe('pk_test_51QzxQzRubZOArVvYnMrEYZjgEialze0MQadGGf26Xjb972ZQmyzMbjVZtM35cQgJ4BkoepE3EadMwbaZUlyepEdK00cULxSHPD');
+const stripePromise = loadStripe(process.env.STRIPE_PUBLISH_KEY);
 
 const PaymentFormInner = ({ bookingId, booking, navigate, isLoading, isError, error }) => {
   const stripe = useStripe();
