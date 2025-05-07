@@ -7,7 +7,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe(process.env.STRIPE_PUBLISH_KEY);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISH_KEY);
 
 const PaymentFormInner = ({ bookingId, booking, navigate, isLoading, isError, error }) => {
   const stripe = useStripe();
@@ -20,7 +20,7 @@ const PaymentFormInner = ({ bookingId, booking, navigate, isLoading, isError, er
     },
     onError: (error) => {
       console.error('Mutation Error:', error.response?.data || error.message);
-      formik.setStatus(error.response?.data?.msg || 'Payment failed');
+      formik.setStatus(error.response?.data?.msg || 'Payment failed. Please try again.');
     },
   });
 

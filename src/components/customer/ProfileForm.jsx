@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { updateProfileAPI, getLicenseStatusAPI } from '../../api/users';
+import { updateProfileAPI, getLicenseStatusAPI, getProfileAPI } from '../../api/users';
 import { useSelector } from 'react-redux';
 import { profileSchema } from '../../utils/validationSchemas';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -11,8 +11,8 @@ const ProfileForm = () => {
   const { data: profileData, isLoading: profileLoading } = useQuery({
     queryKey: ['profile', userId],
     queryFn: async () => {
-      const response = await updateProfileAPI(new FormData()); // Should be getProfileAPI
-      return response.data;
+      const response = await getProfileAPI();
+      return response.user;
     },
     enabled: !!userId,
   });
@@ -32,7 +32,7 @@ const ProfileForm = () => {
   const formik = useFormik({
     initialValues: {
       name: profileData?.name || '',
-      mobile: profileData?.mobile || '', // Added mobile number
+      mobile: profileData?.mobile || '',
       license: null,
     },
     validationSchema: profileSchema,
@@ -40,7 +40,7 @@ const ProfileForm = () => {
     onSubmit: async (values) => {
       const formData = new FormData();
       formData.append('name', values.name);
-      formData.append('mobile', values.mobile); // Added mobile number
+      formData.append('mobile', values.mobile);
       if (values.license) formData.append('license', values.license);
       await mutation.mutateAsync(formData);
     },

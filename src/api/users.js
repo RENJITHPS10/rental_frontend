@@ -32,3 +32,7 @@ export const getLicenseStatusAPI = async () => {
   const response = await axios.get(`${API_URL}/users/license-status`, getAuthHeader());
   return response.data;
 };
+export const getProfileAPI = async () => {
+  const response = await axios.get(`${API_URL}/users/profile`, getAuthHeader());
+  return response.data;
+};
